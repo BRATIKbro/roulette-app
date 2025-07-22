@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('result-modal');
     const resultTitle = document.getElementById('result-title');
     const resultText = document.getElementById('result-text');
-
-    // --- НОВЫЕ КНОПКИ ---
     const spinAgainButton = document.getElementById('spin-again-button');
     const closeAppButton = document.getElementById('close-app-button');
 
@@ -75,31 +73,53 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.restore();
     }
 
-    // Функция вращения осталась без изменений
+    // --- ИЗМЕНЕНО: Функция вращения ---
     function spin() {
         if (isSpinning) return;
         isSpinning = true;
         spinButton.disabled = true;
         spinButton.textContent = 'УДАЧІ!';
+
+        // Включаем анимацию перед вращением
+        canvas.style.transition = 'transform 6s cubic-bezier(0.15, 0.75, 0.3, 1)';
+
         const randomStopAngle = Math.random() * (2 * Math.PI);
         const fullSpins = 7 * (2 * Math.PI);
         const totalRotation = fullSpins + randomStopAngle;
-        canvas.style.transform = `rotate(${totalRotation}rad)`;
-        currentRotation = totalRotation;
+
+        // Накапливаем общий угол поворота
+        currentRotation += totalRotation;
+
+        canvas.style.transform = `rotate(${currentRotation}rad)`;
+
         setTimeout(announceResult, 6200);
     }
 
-    // Функция объявления результата осталась без изменений
+    // --- ИЗМЕНЕНО: Функция объявления результата ---
     function announceResult() {
         const finalAngle = currentRotation % (2 * Math.PI);
         const pointerPosition = (2 * Math.PI) - finalAngle + (anglePerSegment / 2);
         const winningIndex = Math.floor(pointerPosition / anglePerSegment) % segmentCount;
         const winningSegment = segments[winningIndex];
+
         showModal(winningSegment);
         isSpinning = false;
+
+        // --- ДОБАВЛЕН БЛОК СБРОСА АНИМАЦИИ ---
+        // После показа результата, мы "сбрасываем" колесо в его конечное положение
+        // без анимации, чтобы следующий прокрут был "чистым".
+        setTimeout(() => {
+            // 1. Выключаем плавный переход
+            canvas.style.transition = 'none';
+            // 2. Устанавливаем итоговый угол (остаток от деления на 360 градусов)
+            const actualFinalRotation = currentRotation % (2 * Math.PI);
+            canvas.style.transform = `rotate(${actualFinalRotation}rad)`;
+            // 3. Обновляем currentRotation, чтобы он не накапливался бесконечно
+            currentRotation = actualFinalRotation;
+        }, 500); // Небольшая задержка после окончания анимации
     }
 
-    // Функция показа модального окна осталась без изменений
+    // Функция показа модального окна без изменений
     function showModal(prize) {
         const isWin = !(prize.label === 'Нічого' || prize.label === 'Ще раз');
         if (isWin) {
@@ -112,25 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('visible');
     }
 
-    // --- ОБНОВЛЕННАЯ ЛОГИКА КНОПОК ---
-
-    // Функция для кнопки "Ще раз"
+    // Функция для кнопки "Ще раз" без изменений
     function playAgain() {
         modal.classList.remove('visible');
-        spinButton.disabled = false; // Снова активируем главную кнопку
+        spinButton.disabled = false;
         spinButton.textContent = 'КРУТИТИ!';
     }
 
-    // Функция для кнопки "Закрити"
+    // Функция для кнопки "Закрити" без изменений
     function closeApp() {
-        tg.close(); // Закрываем веб-приложение
+        tg.close();
     }
 
-    // Назначаем обработчики событий
+    // Назначение обработчиков без изменений
     spinButton.addEventListener('click', spin);
     spinAgainButton.addEventListener('click', playAgain);
     closeAppButton.addEventListener('click', closeApp);
 
-    // Первоначальная отрисовка колеса
+    // Первоначальная отрисовка
     drawRoulette();
 });
