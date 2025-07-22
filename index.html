@@ -2,36 +2,47 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- Адаптивность для мобильных устройств -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Рулетка "Дідусь Мухомор"</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>Рулетка Дідуся Мухомора</title>
+    <!-- Подключаем сказочные шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Montserrat:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
+        <!-- Декоративные элементы для атмосферы -->
+        <div class="decoration mushrooms-left"></div>
+        <div class="decoration mushrooms-right"></div>
+        <div class="decoration grass"></div>
+
+        <h1 class="main-title">Колесо Фортуни</h1>
+
         <div class="roulette-wrapper">
-            <!-- Canvas для отрисовки колеса -->
-            <canvas id="roulette-canvas" width="320" height="320"></canvas>
-            <!-- Статичный указатель -->
-            <div class="pointer"></div>
+            <!-- Основа для колеса, чтобы тень была под ним -->
+            <div class="roulette-base">
+                <canvas id="roulette-canvas" width="320" height="320"></canvas>
+            </div>
+            <!-- Указатель-мухоморчик -->
+            <div class="pointer-mushroom">
+                <div class="pointer-cap"></div>
+                <div class="pointer-stem"></div>
+            </div>
         </div>
-        <!-- Кнопка для запуска вращения -->
-        <button id="spin-button">КРУТИТЬ!</button>
+        <button id="spin-button">КРУТИТИ!</button>
     </div>
 
-    <!-- Модальное окно для отображения результата (изначально скрыто) -->
+    <!-- Модальное окно в виде свитка -->
     <div id="result-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h2>Поздравляем!</h2>
-            <p id="result-text">Ваш выигрыш: 50 бонусов 🍄</p>
-            <button id="close-modal-button">Закрыть</button>
+        <div class="modal-content-scroll">
+            <h2 id="result-title">Вітаємо!</h2>
+            <p id="result-text">Ваш виграш: 50 бонусів</p>
+            <button id="close-modal-button">Чудово!</button>
         </div>
     </div>
 
-    <!-- Скрипт для интеграции с Telegram -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Основной скрипт логики рулетки -->
     <script src="script.js"></script>
 </body>
 </html>

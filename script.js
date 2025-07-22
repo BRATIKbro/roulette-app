@@ -3,112 +3,128 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('roulette-canvas');
     const spinButton = document.getElementById('spin-button');
     const modal = document.getElementById('result-modal');
+    const resultTitle = document.getElementById('result-title');
     const resultText = document.getElementById('result-text');
     const closeModalButton = document.getElementById('close-modal-button');
 
-    // Инициализируем объект Telegram Web App
     const tg = window.Telegram.WebApp;
-    tg.ready(); // Сообщаем Telegram, что приложение готово к отображению
+    tg.ready();
 
     const ctx = canvas.getContext('2d');
 
-    // --- НАСТРОЙКИ РУЛЕТКИ ---
-    // Список призов. Можно легко добавлять или удалять секторы.
+    // --- НАСТРОЙКИ РУЛЕТКИ С ИКОНКАМИ ---
     const segments = [
-        { color: '#FDFD96', label: '10 🍄' },
-        { color: '#FFB3B3', label: 'Ничего' },
-        { color: '#C1FFD7', label: 'Скидка 5%' },
-        { color: '#FFDDC1', label: '25 🍄' },
-        { color: '#B3E0FF', label: 'Попробовать снова' },
-        { color: '#FFB3E6', label: 'Скидка 10%' },
-        { color: '#D7B3FF', label: '50 🍄' },
-        { color: '#B3FFFF', label: '100 🍄' }
+        { color: '#f9e79f', label: '10', icon: '🍄' },
+        { color: '#d5dbdb', label: 'Нічого', icon: '🍂' },
+        { color: '#a9dfbf', label: 'Знижка 5%', icon: '🏷️' },
+        { color: '#f5cba7', label: '25', icon: '🍄' },
+        { color: '#aed6f1', label: 'Ще раз', icon: '🔄' },
+        { color: '#f1c40f', label: 'Знижка 10%', icon: '🏷️' },
+        { color: '#d7bde2', label: '50', icon: '🍄' },
+        { color: '#fAD7A0', label: '100', icon: '🍄' }
     ];
 
     const segmentCount = segments.length;
     const anglePerSegment = 2 * Math.PI / segmentCount;
     const radius = canvas.width / 2;
-    let currentRotation = 0; // Текущий угол поворота колеса
+    let currentRotation = 0;
     let isSpinning = false;
 
     // Функция для отрисовки колеса рулетки
     function drawRoulette() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Рисуем текстуру дерева как фон колеса
+        ctx.fillStyle = '#8B4513'; // Основной цвет дерева
+        ctx.beginPath();
+        ctx.arc(radius, radius, radius, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // Рисуем "годовые кольца" для эффекта среза
+        ctx.strokeStyle = '#5E2F0E'; // Темный цвет для колец
+        ctx.lineWidth = 2;
+        for (let i = radius - 20; i > 20; i -= 25) {
+            ctx.beginPath();
+            ctx.arc(radius, radius, i, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+
         ctx.save();
-        ctx.translate(radius, radius); // Перемещаем центр координат в центр canvas
+        ctx.translate(radius, radius);
 
         segments.forEach((segment, i) => {
             const startAngle = i * anglePerSegment;
-            const endAngle = startAngle + anglePerSegment;
 
-            // Рисуем сектор
+            // Рисуем секторы поверх дерева
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.arc(0, 0, radius - 5, startAngle, endAngle); // -5 для небольшого отступа от края
+            ctx.arc(0, 0, radius - 5, startAngle, startAngle + anglePerSegment);
             ctx.closePath();
             ctx.fillStyle = segment.color;
+            ctx.globalAlpha = 0.8; // Делаем секторы полупрозрачными
             ctx.fill();
-            ctx.stroke(); // Добавляем обводку для лучшего разделения
+            ctx.globalAlpha = 1.0; // Возвращаем полную непрозрачность
 
-            // Рисуем текст на секторе
+            // Обводка секторов
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#5E2F0E';
+            ctx.stroke();
+
+            // Рисуем текст и иконки
             ctx.save();
-            ctx.fillStyle = '#333';
-            ctx.font = 'bold 16px Montserrat';
+            ctx.fillStyle = '#402a1a';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            // Поворачиваем контекст, чтобы текст был направлен от центра
             const textAngle = startAngle + anglePerSegment / 2;
             ctx.rotate(textAngle);
-            ctx.fillText(segment.label, radius * 0.65, 0); // 0.65 - расстояние от центра
+
+            // Иконка
+            ctx.font = '24px Montserrat';
+            ctx.fillText(segment.icon, radius * 0.55, 0);
+
+            // Текст
+            ctx.font = 'bold 14px Montserrat';
+            ctx.fillText(segment.label, radius * 0.80, 0);
+
             ctx.restore();
         });
         ctx.restore();
     }
 
-    // Функция для запуска вращения
+    // Функция для запуска вращения (логика та же)
     function spin() {
         if (isSpinning) return;
         isSpinning = true;
-        spinButton.disabled = true; // Деактивируем кнопку
-        spinButton.textContent = 'УДАЧИ!';
-
-        // Определяем случайный угол остановки
+        spinButton.disabled = true;
+        spinButton.textContent = 'УДАЧІ!';
         const randomStopAngle = Math.random() * (2 * Math.PI);
-        // Добавляем несколько полных оборотов для красивой анимации
-        const fullSpins = 5 * (2 * Math.PI);
+        const fullSpins = 7 * (2 * Math.PI); // Больше оборотов для эффекта
         const totalRotation = fullSpins + randomStopAngle;
-
-        // Применяем CSS transition для плавного вращения
         canvas.style.transform = `rotate(${totalRotation}rad)`;
         currentRotation = totalRotation;
-
-        // Ждем окончания анимации (время должно совпадать с transition в CSS)
-        setTimeout(announceResult, 6200); // 6000ms анимация + 200ms запас
+        setTimeout(announceResult, 6200);
     }
 
     // Функция определения и отображения результата
     function announceResult() {
-        // Вычисляем итоговый угол (остаток от деления на 2*PI)
         const finalAngle = currentRotation % (2 * Math.PI);
-
-        // Вычисляем индекс выигрышного сектора.
         const pointerPosition = (2 * Math.PI) - finalAngle + (anglePerSegment / 2);
         const winningIndex = Math.floor(pointerPosition / anglePerSegment) % segmentCount;
         const winningSegment = segments[winningIndex];
-
-        // Отображаем результат в модальном окне
-        showModal(winningSegment.label);
-
+        showModal(winningSegment);
         isSpinning = false;
-        // Кнопку не активируем, т.к. пользователь должен закрыть приложение
     }
 
     // Функция для показа модального окна
     function showModal(prize) {
-        if (prize === 'Ничего' || prize === 'Попробовать снова') {
-             resultText.innerHTML = `В этот раз не повезло. <br>Ваш результат: <strong>${prize}</strong>`;
+        const isWin = !(prize.label === 'Нічого' || prize.label === 'Ще раз');
+
+        if (isWin) {
+            resultTitle.textContent = 'Вітаємо!';
+            resultText.innerHTML = `Ваш виграш: <strong>${prize.label} ${prize.icon}</strong>`;
         } else {
-             resultText.innerHTML = `Ваш выигрыш: <strong>${prize}</strong>`;
+            resultTitle.textContent = 'На жаль...';
+            resultText.innerHTML = `Цього разу не пощастило. <br>Спробуйте <strong>${prize.label.toLowerCase()}</strong>!`;
         }
         modal.classList.add('visible');
     }
@@ -116,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Функция для закрытия модального окна и всего приложения
     function closeModal() {
         modal.classList.remove('visible');
-        // Команда для Telegram закрыть окно Mini App
         tg.close();
     }
 
@@ -124,6 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
     spinButton.addEventListener('click', spin);
     closeModalButton.addEventListener('click', closeModal);
 
-    // Первоначальная отрисовка колеса при загрузке страницы
+    // Первоначальная отрисовка колеса
     drawRoulette();
 });
