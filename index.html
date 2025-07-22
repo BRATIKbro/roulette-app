@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Рулетка Дідуся Мухомора</title>
-    <!-- Подключаем сказочные шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Montserrat:wght@500&display=swap" rel="stylesheet">
@@ -12,19 +11,14 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Декоративные элементы для атмосферы -->
         <div class="decoration mushrooms-left"></div>
         <div class="decoration mushrooms-right"></div>
         <div class="decoration grass"></div>
-
         <h1 class="main-title">Колесо Фортуни</h1>
-
         <div class="roulette-wrapper">
-            <!-- Основа для колеса, чтобы тень была под ним -->
             <div class="roulette-base">
                 <canvas id="roulette-canvas" width="320" height="320"></canvas>
             </div>
-            <!-- Указатель-мухоморчик -->
             <div class="pointer-mushroom">
                 <div class="pointer-cap"></div>
                 <div class="pointer-stem"></div>
@@ -38,7 +32,11 @@
         <div class="modal-content-scroll">
             <h2 id="result-title">Вітаємо!</h2>
             <p id="result-text">Ваш виграш: 50 бонусів</p>
-            <button id="close-modal-button">Чудово!</button>
+            <!-- Контейнер для двух кнопок -->
+            <div class="modal-buttons">
+                <button id="spin-again-button">Ще раз</button>
+                <button id="close-app-button">Закрити</button>
+            </div>
         </div>
     </div>
 

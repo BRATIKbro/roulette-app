@@ -7,6 +7,8 @@
     --text-color: #F5DEB3; /* Цвет пергамента */
     --stone-bg: #6c757d;
     --stone-shadow: #495057;
+    --green-button-bg: #28a745;
+    --green-button-shadow: #1e7e34;
 }
 
 @font-face {
@@ -116,7 +118,7 @@ body, html {
 .modal-content-scroll {
     background-color: var(--text-color);
     color: #3a2e24;
-    padding: 40px 25px; border-radius: 10px;
+    padding: 30px 25px 20px; border-radius: 10px;
     text-align: center; width: 85%; max-width: 350px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     border: 10px solid #c8a47e;
@@ -129,15 +131,38 @@ body, html {
     font-size: 3em; margin-top: 0; margin-bottom: 10px;
     color: var(--wood-dark-color);
 }
-#result-text { font-size: 18px; margin: 15px 0 25px; }
-#close-modal-button {
-    padding: 12px 30px; font-size: 16px; font-weight: bold;
-    color: white; background-color: var(--stone-bg);
-    border: none; border-radius: 10px; cursor: pointer;
-    box-shadow: 0 4px 0 var(--stone-shadow);
-    transition: all 0.15s ease-in-out;
+#result-text { font-size: 18px; margin: 10px 0 20px; }
+
+/* --- НОВЫЕ СТИЛИ ДЛЯ КНОПОК В МОДАЛЬНОМ ОКНЕ --- */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
-#close-modal-button:active {
+.modal-buttons button {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    flex-grow: 1;
+}
+#spin-again-button {
+    background-color: var(--green-button-bg);
+    box-shadow: 0 4px 0 var(--green-button-shadow);
+}
+#spin-again-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--green-button-shadow);
+}
+#close-app-button {
+    background-color: var(--stone-bg);
+    box-shadow: 0 4px 0 var(--stone-shadow);
+}
+#close-app-button:active {
     transform: translateY(2px);
     box-shadow: 0 2px 0 var(--stone-shadow);
 }
