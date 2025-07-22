@@ -1,0 +1,163 @@
+/* Глобальные переменные для удобства смены темы */
+:root {
+    --bg-color: #2a3c50;
+    --text-color: #f0f2f5;
+    --pointer-color: #ff4757;
+    --button-bg: #f39c12;
+    --button-shadow: #c27c0e;
+    --button-active-bg: #e67e22;
+    --modal-bg: #34495e;
+}
+
+/* Сброс стилей и базовые настройки */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    -webkit-tap-highlight-color: transparent; /* Убирает подсветку при касании на iOS */
+}
+
+/* Контейнер приложения */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Обертка для рулетки и указателя */
+.roulette-wrapper {
+    position: relative;
+    width: 90vw;
+    max-width: 320px;
+    aspect-ratio: 1 / 1; /* Сохраняет квадратные пропорции */
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Указатель (стрелка) */
+.pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 30px solid var(--pointer-color);
+    z-index: 10;
+    filter: drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Canvas, на котором рисуется колесо */
+#roulette-canvas {
+    width: 100%;
+    height: 100%;
+    transition: transform 6s cubic-bezier(0.1, 0.7, 0.3, 1); /* Плавная анимация вращения */
+    filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.3));
+}
+
+/* Кнопка "Крутить" */
+#spin-button {
+    padding: 18px 0;
+    width: 80%;
+    max-width: 280px;
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--button-bg);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 0 8px 0 var(--button-shadow);
+    transition: all 0.15s ease-in-out;
+}
+
+#spin-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 var(--button-shadow);
+}
+
+#spin-button:disabled {
+    background-color: #95a5a6;
+    box-shadow: 0 8px 0 #7f8c8d;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Стили для модального окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--modal-bg);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    width: 85%;
+    max-width: 350px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s;
+}
+
+.modal-overlay.visible .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--button-bg);
+}
+
+.modal-content p {
+    font-size: 18px;
+    margin: 15px 0 25px;
+}
+
+#close-modal-button {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--bg-color);
+    background-color: var(--text-color);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#close-modal-button:hover {
+    background-color: #bdc3c7;
+}
